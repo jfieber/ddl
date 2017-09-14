@@ -1,0 +1,18 @@
+FROM golang:1.8
+
+RUN mkdir -p $GOPATH/src/github.com/jfieber/ddleak
+WORKDIR $GOPATH/src/github.com/jfieber/ddleak
+
+COPY main.go .
+COPY vendor/ vendor
+
+# RUN go build -v -o main
+RUN go build -v -a -ldflags '-s' -o main
+RUN cp main /
+
+WORKDIR /
+COPY Dockerfile /
+COPY container/ /container
+
+# Produce the docker context for the runtime build
+CMD ["tar", "-c", "main", "Dockerfile", "container"]

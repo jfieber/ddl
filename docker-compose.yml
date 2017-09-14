@@ -1,0 +1,13 @@
+version: '3'
+services:
+  ddleak:
+    image: img1
+    environment:
+      ENVIRONMENT_NAME: Stage
+      REGION_NAME: us-east-1
+      DD_API_KEY: <redacted>
+      DD_INSTANCE_PREFIX: ddl
+    env_file:
+      - ddtags.env
+    ports:
+     - "8080:8080"

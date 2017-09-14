@@ -1,0 +1,18 @@
+#!/bin/bash
+source /scripts/with-bigcontenv
+
+# TEMPORARY - send a flare to datadog tech support
+if [ -n "$DD_FLARE_TICKET" -a -n "$DD_FLARE_EMAIL" ]; then
+    echo "SENDING A FLARE..."
+    # make sure the datadog agent has had time to start up
+    sleep 10 # make sure
+    /etc/init.d/datadog-agent flare $DD_FLARE_TICKET <<EOF
+Y
+$DD_FLARE_EMAIL
+EOF
+fi
+
+# Emit some process information periodically.
+while true; do ps -e -o pid,vsz,rss,stat,time,etime,args; sleep 60; done &
+
+exec s6-setuidgid ${NOT_ROOT_USER} /main
